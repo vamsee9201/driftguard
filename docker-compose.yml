@@ -1,0 +1,34 @@
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.16.2
+    command: >-
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlruns/mlflow.db
+      --artifacts-destination /mlruns/artifacts
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlruns:/mlruns
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/health')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    environment:
+      # The API tracks against the shared MLflow server's backing store.
+      DRIFTGUARD_TRACKING: sqlite:////mlruns/mlflow.db
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    ports:
+      - "8000:8000"
+    volumes:
+      - mlruns:/mlruns
+      - ./data:/app/data
+    depends_on:
+      mlflow:
+        condition: service_healthy
+
+volumes:
+  mlruns:

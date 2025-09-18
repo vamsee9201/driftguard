@@ -1,0 +1,19 @@
+{
+  "versions": {
+    "v1": 1,
+    "v2": 2
+  },
+  "eval": "held-out 2012 slice (never used for training)",
+  "n_train_v1": 8645,
+  "n_train_v2": 15632,
+  "n_heldout": 1747,
+  "v1_mae_heldout": 87.3096905688005,
+  "v2_mae_heldout": 48.34535570703019,
+  "mae_reduction_pct": 44.6,
+  "prediction_psi_before": 0.22271342507244157,
+  "prediction_psi_after": 0.0667515329187588,
+  "drifted_before": true,
+  "drifted_after": false,
+  "retrained": true,
+  "improved": true
+}
